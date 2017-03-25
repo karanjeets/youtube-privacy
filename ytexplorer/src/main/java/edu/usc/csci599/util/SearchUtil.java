@@ -70,6 +70,8 @@ public class SearchUtil {
                                 //TODO: Filter URLs if required
                                 System.out.println(element.getText() + " - " + url);
 
+                                
+
                                 // TODO: Extract content if required
                                 urlContent.put(url, "");
                                 if(urlContent.size() == topN) {
