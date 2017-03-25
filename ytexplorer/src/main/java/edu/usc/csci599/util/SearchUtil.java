@@ -3,7 +3,10 @@ package edu.usc.csci599.util;
 import edu.usc.csci599.fetch.Fetcher;
 import edu.usc.csci599.model.Query;
 import edu.usc.csci599.model.QueryResult;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +44,7 @@ public class SearchUtil {
         boolean badRequest = false;
         try {
             driver = Fetcher.getSeleniumDriverInstance();
-            driver.get("https://api.duckduckgo.com/?q=" + query.getValue() + "&kl=" + query.getRegion());
+            driver.get("https://www.youtube.com/results?search_query=" + query.getValue());
         }
         catch(Exception e) {
             if(e instanceof TimeoutException) {
@@ -56,7 +59,7 @@ public class SearchUtil {
             try {
                 if(!badRequest) {
                     int resultSize = 0;
-                    List<WebElement> results = driver.findElements(By.className("result__a"));
+                    List<WebElement> results = driver.findElements(By.className("yt-uix-tile-link"));
                     resultSize = results.size();
                     System.out.println("Result Size: " + resultSize);
                     if(results.size() > 0) {
@@ -65,25 +68,21 @@ public class SearchUtil {
                                 String url = element.getAttribute("href");
 
                                 //TODO: Filter URLs if required
+                                System.out.println(element.getText() + " - " + url);
 
-                                String content = Fetcher.getPageText(url);
-                                if(content == null || content.trim().isEmpty()) {
-                                    continue;
-                                }
-                                urlContent.put(url, content);
+                                // TODO: Extract content if required
+                                urlContent.put(url, "");
                                 if(urlContent.size() == topN) {
                                     break;
                                 }
                             }
                             if(urlContent.size() < topN) {
-                                // Infinite Scroll
-                                if (driver instanceof JavascriptExecutor) {
-                                    ((JavascriptExecutor) driver)
-                                            .executeScript("window.scrollTo(0, document.body.scrollHeight);");
-                                }
+                                // Page Scroll
+                                List<WebElement> pageLinks = driver.findElements(By.className("vve-check"));
+                                pageLinks.get(pageLinks.size() - 1).click();
+                                Thread.sleep(3000);
                                 // Filter new results
-                                results = driver.findElements(By.className("result__a"));
-                                results = results.subList(resultSize, results.size());
+                                results = driver.findElements(By.className("yt-uix-tile-link"));
                                 resultSize = results.size();
                                 System.out.println("Moved to Next Page. Result Size: " + resultSize);
                             }
@@ -124,9 +123,10 @@ public class SearchUtil {
 
 
     public static void main(String[] args) {
-        Query query = new Query("nsidc");
-        for(String url: queryAndFetch(query, 30).getUrlContent().keySet()) {
+        Query query = new Query("suit suit karda");
+        queryAndFetch(query, 30);
+        /*for(String url: queryAndFetch(query, 30).getUrlContent().keySet()) {
             System.out.println(url);
-        }
+        }*/
     }
 }
