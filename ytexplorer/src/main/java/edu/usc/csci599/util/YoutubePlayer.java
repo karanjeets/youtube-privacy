@@ -1,10 +1,14 @@
 package edu.usc.csci599.util;
 
 import edu.usc.csci599.fetch.Fetcher;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by ksingh on 2/16/17.
@@ -40,6 +44,7 @@ public class YoutubePlayer {
                 if(!badRequest) {
                     // TODO: Add random function
                     Thread.sleep(5000);
+                    likeVideo(driver);
                 }
             }
             catch(Exception e) {
@@ -70,7 +75,19 @@ public class YoutubePlayer {
         openVideo(url, "0");
     }
 
-
+    public static void likeVideo(WebDriver driver)
+    {
+    	List<WebElement> list = driver.findElements(By.className("yt-uix-button"));
+    	for(WebElement e :list)
+    	{
+    		if(e.getAttribute("title").equals("I like this"))
+    		{
+    			e.click();
+    			break;
+    		}
+    	}
+    }
+    
     public static void main(String[] args) {
         openVideo("https://www.youtube.com/watch?v=uQ763VvqiEM");
         /*for(String url: queryAndFetch(query, 30).getUrlContent().keySet()) {
