@@ -11,7 +11,7 @@ public interface Constants {
     Integer PAGE_TIMEOUT_SECS = 10;
     String JSOUP_USER_AGENT = "mozilla";
     Boolean IS_BOILERPIPE = true;
-    String FFX_BIN_PATH = "/Applications/FirefoxOld.app/Contents/MacOS/firefox";
+    String FFX_BIN_PATH = "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
 
 
     // Location Properties

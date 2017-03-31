@@ -1,12 +1,14 @@
 package edu.usc.csci599.util;
 
 import edu.usc.csci599.fetch.Fetcher;
+import edu.usc.csci599.util.Video;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -88,10 +90,96 @@ public class YoutubePlayer {
     	}
     }
     
+    public static List<Video> getRecommendedVideos()
+    {
+        WebDriver driver = null;
+        boolean badRequest = false;
+        ArrayList<Video> recommendVideoList = new ArrayList<Video>();
+        try {
+            driver = Fetcher.getSeleniumDriverInstance();
+            driver.get("https://www.youtube.com/feed/recommended");
+        }
+        catch(Exception e) {
+            if(e instanceof TimeoutException) {
+                System.out.println("Timeout Exception Raised. Processing whatever loaded so far...");
+            }
+            else {
+                e.printStackTrace();
+                badRequest = true;
+            }
+        }
+        finally {
+        	
+        	//process page here. //feed-item-container
+        	List<WebElement> videoList = driver.findElements(By.className("feed-item-dismissable"));
+     	
+        	for(WebElement video : videoList)
+        	{	
+        		
+        		String url = "";
+        		String title = "";
+        		String duration = "";
+        		
+        		try {
+        			url = video.findElement(By.className("yt-uix-tile-link")).getAttribute("href");
+        			title = video.findElement(By.className("yt-uix-tile-link")).getAttribute("title");
+            		duration = video.findElement(By.className("video-time")).getText();	
+        		}
+        		catch (Exception  e)
+        		{
+        			e.printStackTrace();
+        			continue;
+        		}
+        		
+        		int videoDuration = convertTime(duration);
+        		Video element = new Video(videoDuration,title,url);
+        		recommendVideoList.add(element);
+        	}
+        	
+            if(driver != null) {
+                try {
+                    driver.close();
+                    driver.quit();
+                }
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        	
+        }
+        return recommendVideoList;
+    }
+    
+    public static int convertTime(String time)
+    {
+    	
+    	String[] hhmmss = time.split(":");
+    	int factor = 1;
+    	int total_seconds = 0;
+    	for(int i=hhmmss.length;i>=0;i--)
+    	{
+    		total_seconds += (Integer.parseInt(hhmmss[i])*factor);
+    		factor*= 60;
+    	}
+    	return total_seconds;
+    }
+    
     public static void main(String[] args) {
-        openVideo("https://www.youtube.com/watch?v=uQ763VvqiEM");
+    	getRecommendedVideos();
+    	//openVideo("https://www.youtube.com/watch?v=uQ763VvqiEM");
         /*for(String url: queryAndFetch(query, 30).getUrlContent().keySet()) {
             System.out.println(url);
         }*/
     }
+    
+    /* To be done
+     * Recommendation videos and channels 
+     * Duration extract after search query
+     * Randomized function to play videos 
+     * Add to Playlist
+     * 
+     * 
+     * */
+    
+    
 }
