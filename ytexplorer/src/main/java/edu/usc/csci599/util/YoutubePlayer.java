@@ -132,6 +132,7 @@ public class YoutubePlayer {
         		}
         		
         		int videoDuration = convertTime(duration);
+        		System.out.println(videoDuration);
         		Video element = new Video(videoDuration,title,url);
         		recommendVideoList.add(element);
         	}
@@ -156,13 +157,15 @@ public class YoutubePlayer {
     	String[] hhmmss = time.split(":");
     	int factor = 1;
     	int total_seconds = 0;
-    	for(int i=hhmmss.length;i>=0;i--)
+    	for(int i=(hhmmss.length-1);i>=0;i--)
     	{
     		total_seconds += (Integer.parseInt(hhmmss[i])*factor);
     		factor*= 60;
     	}
     	return total_seconds;
     }
+    
+    
     
     public static void main(String[] args) {
     	getRecommendedVideos();
