@@ -45,7 +45,12 @@ public class YoutubePlayer {
                 if(!badRequest) {
                     // TODO: Add random function
                     Thread.sleep(duration*1000);
-                    likeVideo(driver);
+                    
+                    Random r = new Random();
+                    int randNumber = r.nextInt(2);
+                    if(randNumber==1) {
+                    	likeVideo(driver);
+                    }
                 }
             }
             catch(Exception e) {
@@ -78,6 +83,7 @@ public class YoutubePlayer {
     	int duration = video.getTime();
     	String url = video.getUrl();
     	Random r = new Random();
+    	System.out.println("Actual Duration of video is  "+ duration);
     	int playTime = r.nextInt(2*duration/5);
     	playTime+= (duration/5);
     	if(playTime>=400)
@@ -87,7 +93,9 @@ public class YoutubePlayer {
     	
     	int startTime = r.nextInt(duration/5);
     	startTime += duration/5;
-    	openVideo(url,Integer.toString(startTime),duration);
+    	System.out.println("Opening video starting from "+ startTime + " and will continue for "+ playTime + " seconds");
+    	
+    	openVideo(url,Integer.toString(startTime),playTime);
     	
     }
     

@@ -12,7 +12,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -44,7 +43,6 @@ public class SearchUtil {
         }
 
         ArrayList<Video> videoList = new ArrayList<Video>();
-        HashMap<String,String> urlContent = new HashMap<>();
         WebDriver driver = null;
         boolean badRequest = false;
         try {
@@ -80,7 +78,7 @@ public class SearchUtil {
                                    url = element.findElement(By.className("yt-uix-tile-link")).getAttribute("href");
                                    title = element.findElement(By.className("yt-uix-tile-link")).getAttribute("title");
                                    
-                                   if(!url.contains("channel"))
+                                   if(!url.contains("channel") && !url.contains("user"))
                                    {
                                 	   duration = element.findElement(By.className("video-time")).getText();
                                 	   int durationVal = YoutubePlayer.convertTime(duration);
@@ -94,7 +92,6 @@ public class SearchUtil {
                             	}
                                 //TODO: Filter URLs if required
                                 // TODO: Extract content if required
-                                urlContent.put(url, "");
                                 if(videoList.size() == topN) {
                                     break;
                                 }
@@ -131,7 +128,7 @@ public class SearchUtil {
 
         System.out.println("Search Completed");
 
-        QueryResult queryResult = new QueryResult(query, urlContent);
+        QueryResult queryResult = new QueryResult(query, videoList);
         return queryResult;
     }
 
