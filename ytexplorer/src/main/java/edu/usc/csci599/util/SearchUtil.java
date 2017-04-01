@@ -5,14 +5,12 @@ import edu.usc.csci599.fetch.Fetcher;
 import edu.usc.csci599.model.Query;
 import edu.usc.csci599.model.QueryResult;
 import edu.usc.csci599.model.Video;
-import edu.usc.csci599.util.YoutubePlayer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -43,8 +41,7 @@ public class SearchUtil {
             */
         }
 
-        ArrayList<Video> videoList = new ArrayList<Video>();
-        HashMap<String,String> urlContent = new HashMap<>();
+        ArrayList<Video> videoList = new ArrayList<>();
         WebDriver driver = null;
         boolean badRequest = false;
         try {
@@ -94,7 +91,6 @@ public class SearchUtil {
                             	}
                                 //TODO: Filter URLs if required
                                 // TODO: Extract content if required
-                                urlContent.put(url, "");
                                 if(videoList.size() == topN) {
                                     break;
                                 }
@@ -131,7 +127,7 @@ public class SearchUtil {
 
         System.out.println("Search Completed");
 
-        QueryResult queryResult = new QueryResult(query, urlContent);
+        QueryResult queryResult = new QueryResult(query, videoList);
         return queryResult;
     }
 
@@ -146,10 +142,10 @@ public class SearchUtil {
 
 
     public static void main(String[] args) {
-        Query query = new Query("suit suit karda");
-        queryAndFetch(query, 30);
-        /*for(String url: queryAndFetch(query, 30).getUrlContent().keySet()) {
-            System.out.println(url);
-        }*/
+        Query query = new Query("bb ki vines");
+        //queryAndFetch(query, 30);
+        for(Video video: queryAndFetch(query, 30).getVideos()) {
+            System.out.println(video.getUrl());
+        }
     }
 }
