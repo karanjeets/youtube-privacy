@@ -1,13 +1,17 @@
 package edu.usc.csci599.util;
 
+
 import edu.usc.csci599.fetch.Fetcher;
 import edu.usc.csci599.model.Query;
 import edu.usc.csci599.model.QueryResult;
+import edu.usc.csci599.model.Video;
+import edu.usc.csci599.util.YoutubePlayer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,6 +43,7 @@ public class SearchUtil {
             */
         }
 
+        ArrayList<Video> videoList = new ArrayList<Video>();
         HashMap<String,String> urlContent = new HashMap<>();
         WebDriver driver = null;
         boolean badRequest = false;
@@ -58,35 +63,51 @@ public class SearchUtil {
         finally {
             try {
                 if(!badRequest) {
-                    int resultSize = 0;
-                    List<WebElement> results = driver.findElements(By.className("yt-uix-tile-link"));
-                    resultSize = results.size();
-                    System.out.println("Result Size: " + resultSize);
-                    if(results.size() > 0) {
-                        while (urlContent.size() < topN && resultSize > 0) {
-                            for(WebElement element: results) {
-                                String url = element.getAttribute("href");
+                    int feedSize = 0;
+                    
+                    List<WebElement> feedList = driver.findElements(By.className("yt-lockup-dismissable"));
 
+                    feedSize = feedList.size();
+                    System.out.println("Result Size: " + feedSize);
+                    if(feedList.size() > 0) {
+                        while (videoList.size() < topN && feedSize > 0) {
+                            for(WebElement element: feedList) {
+                            
+                            	String url= "";
+                            	String title = "";
+                            	String duration ="";
+                            	try {
+                                   url = element.findElement(By.className("yt-uix-tile-link")).getAttribute("href");
+                                   title = element.findElement(By.className("yt-uix-tile-link")).getAttribute("title");
+                                   
+                                   if(!url.contains("channel"))
+                                   {
+                                	   duration = element.findElement(By.className("video-time")).getText();
+                                	   int durationVal = YoutubePlayer.convertTime(duration);
+                                	   Video vid = new Video(durationVal,title,url);
+                                	   videoList.add(vid);
+                                   }
+                            	}
+                            	catch (Exception e)
+                            	{
+                            		continue;
+                            	}
                                 //TODO: Filter URLs if required
-                                System.out.println(element.getText() + " - " + url);
-
-                                
-
                                 // TODO: Extract content if required
                                 urlContent.put(url, "");
-                                if(urlContent.size() == topN) {
+                                if(videoList.size() == topN) {
                                     break;
                                 }
                             }
-                            if(urlContent.size() < topN) {
+                            if(videoList.size() < topN) {
                                 // Page Scroll
                                 List<WebElement> pageLinks = driver.findElements(By.className("vve-check"));
                                 pageLinks.get(pageLinks.size() - 1).click();
                                 Thread.sleep(3000);
                                 // Filter new results
-                                results = driver.findElements(By.className("yt-uix-tile-link"));
-                                resultSize = results.size();
-                                System.out.println("Moved to Next Page. Result Size: " + resultSize);
+                                feedList = driver.findElements(By.className("yt-lockup-dismissable"));
+                                feedSize = feedList.size();
+                                System.out.println("Moved to Next Page. Result Size: " + feedSize);
                             }
                         }
                     }
