@@ -5,7 +5,6 @@ import edu.usc.csci599.fetch.Fetcher;
 import edu.usc.csci599.model.Query;
 import edu.usc.csci599.model.QueryResult;
 import edu.usc.csci599.model.Video;
-import edu.usc.csci599.util.YoutubePlayer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -43,6 +42,7 @@ public class SearchUtil {
         }
 
         ArrayList<Video> videoList = new ArrayList<Video>();
+
         WebDriver driver = null;
         boolean badRequest = false;
         try {
@@ -143,10 +143,10 @@ public class SearchUtil {
 
 
     public static void main(String[] args) {
-        Query query = new Query("suit suit karda");
-        queryAndFetch(query, 30);
-        /*for(String url: queryAndFetch(query, 30).getUrlContent().keySet()) {
-            System.out.println(url);
-        }*/
+        Query query = new Query("bb ki vines");
+        //queryAndFetch(query, 30);
+        for(Video video: queryAndFetch(query, 30).getVideos()) {
+            System.out.println(video.getUrl());
+        }
     }
 }
