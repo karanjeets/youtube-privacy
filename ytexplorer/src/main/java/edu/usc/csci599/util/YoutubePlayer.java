@@ -23,10 +23,9 @@ public class YoutubePlayer {
      * @param url
      * @param start
      */
-    public static void openVideo(String url, String start) {
+    public static void openVideo(String url, String start,int duration) {
         System.out.println("URL: " + url);
 
-        HashMap<String,String> urlContent = new HashMap<>();
         WebDriver driver = null;
         boolean badRequest = false;
         try {
@@ -46,7 +45,7 @@ public class YoutubePlayer {
             try {
                 if(!badRequest) {
                     // TODO: Add random function
-                    Thread.sleep(5000);
+                    Thread.sleep(duration*1000);
                     likeVideo(driver);
                 }
             }
@@ -74,9 +73,6 @@ public class YoutubePlayer {
      * Plays a Youtube video
      * @param url
      */
-    public static void openVideo(String url) {
-        openVideo(url, "0");
-    }
 
     public static void playVideo(Video video)
     {
@@ -92,7 +88,7 @@ public class YoutubePlayer {
     	
     	int startTime = r.nextInt(duration/5);
     	startTime += duration/5;
-    	
+    	openVideo(url,Integer.toString(startTime),duration);
     	
     }
     
