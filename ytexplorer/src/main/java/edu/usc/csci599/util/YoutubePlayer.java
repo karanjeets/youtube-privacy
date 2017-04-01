@@ -1,7 +1,7 @@
 package edu.usc.csci599.util;
 
 import edu.usc.csci599.fetch.Fetcher;
-import edu.usc.csci599.util.Video;
+import edu.usc.csci599.model.Video;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -9,7 +9,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -71,7 +70,7 @@ public class YoutubePlayer {
 
     /**
      * Plays a Youtube video
-     * @param url
+     * @param video
      */
 
     public static void playVideo(Video video)

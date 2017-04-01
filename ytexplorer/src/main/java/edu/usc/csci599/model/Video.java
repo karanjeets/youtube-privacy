@@ -1,4 +1,4 @@
-package edu.usc.csci599.util;
+package edu.usc.csci599.model;
 
 public class Video {
 
