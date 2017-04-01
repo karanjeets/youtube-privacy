@@ -12,10 +12,6 @@ public class Explorer {
         System.setProperty("webdriver.firefox.bin", Constants.FFX_BIN_PATH);
     }
 
-
-
-
-
     public static void main(String[] args) {
 
     }

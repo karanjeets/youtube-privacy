@@ -9,6 +9,15 @@ public class Video {
 		this.link = link;
 	}
 	
+	public int getTime()
+	{
+		return this.duration;
+	}
+	
+	public String getUrl()
+	{
+		return this.link;
+	}
 	
 	private int duration;
 	private String title;

@@ -11,6 +11,7 @@ import org.openqa.selenium.WebElement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by ksingh on 2/16/17.
@@ -77,6 +78,24 @@ public class YoutubePlayer {
         openVideo(url, "0");
     }
 
+    public static void playVideo(Video video)
+    {
+    	int duration = video.getTime();
+    	String url = video.getUrl();
+    	Random r = new Random();
+    	int playTime = r.nextInt(2*duration/5);
+    	playTime+= (duration/5);
+    	if(playTime>=400)
+    	{
+    		playTime = 400;
+    	}
+    	
+    	int startTime = r.nextInt(duration/5);
+    	startTime += duration/5;
+    	
+    	
+    }
+    
     public static void likeVideo(WebDriver driver)
     {
     	List<WebElement> list = driver.findElements(By.className("yt-uix-button"));
@@ -165,10 +184,68 @@ public class YoutubePlayer {
     	return total_seconds;
     }
     
+    public static List<String> getChannels()
+    {
+
+        WebDriver driver = null;
+        
+        ArrayList<String> recommendChannels = new ArrayList<String>();
+        try {
+            driver = Fetcher.getSeleniumDriverInstance();
+            driver.get("https://www.youtube.com");
+        }
+        catch(Exception e) {
+            if(e instanceof TimeoutException) {
+                System.out.println("Timeout Exception Raised. Processing whatever loaded so far...");
+            }
+            else {
+                e.printStackTrace();
+                //badRequest = true;
+            }
+        }
+        finally {
+        	
+        	List<WebElement> feedList = driver.findElements(By.className("feed-item-dismissable"));
+         	
+        	for(WebElement feed : feedList)
+        	{	
+        		String channeltitle = "";
+        		String isRecommended = "";
+        			try {
+        				channeltitle = feed.findElement(By.className("branded-page-module-title-text")).getText();
+        				isRecommended = feed.findElement(By.className("shelf-annotation")).getText();
+        			}
+        			catch(Exception e)
+        			{
+        				//e.printStackTrace();
+        				continue;
+        			}
+        			if(isRecommended.contains("Recommended"))
+        			{
+        				recommendChannels.add(channeltitle);
+        				System.out.println(channeltitle);
+        			}
+        	}
+        	
+            if(driver != null) {
+                try {
+                    driver.close();
+                    driver.quit();
+                }
+                catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        	
+        }
+        return recommendChannels;
+    
+    }
     
     
     public static void main(String[] args) {
-    	getRecommendedVideos();
+    	
+    	//getChannels();
     	//openVideo("https://www.youtube.com/watch?v=uQ763VvqiEM");
         /*for(String url: queryAndFetch(query, 30).getUrlContent().keySet()) {
             System.out.println(url);
