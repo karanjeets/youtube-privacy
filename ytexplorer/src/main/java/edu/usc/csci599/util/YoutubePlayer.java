@@ -45,12 +45,9 @@ public class YoutubePlayer {
                 if(!badRequest) {
                     // TODO: Add random function
                     Thread.sleep(duration*1000);
-                    
-                    Random r = new Random();
-                    int randNumber = r.nextInt(2);
-                    if(randNumber==1) {
+
                     	likeVideo(driver);
-                    }
+
                 }
             }
             catch(Exception e) {
@@ -86,9 +83,9 @@ public class YoutubePlayer {
     	System.out.println("Actual Duration of video is  "+ duration);
     	int playTime = r.nextInt(2*duration/5);
     	playTime+= (duration/5);
-    	if(playTime>=400)
+    	if(playTime>=180)
     	{
-    		playTime = 400;
+    		playTime = 180;
     	}
     	
     	int startTime = r.nextInt(duration/5);
@@ -106,6 +103,7 @@ public class YoutubePlayer {
     	{
     		if(e.getAttribute("title").equals("I like this"))
     		{
+    			System.out.println("Liked this video");
     			e.click();
     			break;
     		}
