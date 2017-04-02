@@ -22,13 +22,13 @@ public class YoutubePlayer {
      * @param url
      * @param start
      */
-    public static void openVideo(String url, String start,int duration) {
+    public static void openVideo(WebDriver driver, String url, String start,int duration) {
         System.out.println("URL: " + url);
 
-        WebDriver driver = null;
+        //WebDriver driver = null;
         boolean badRequest = false;
         try {
-            driver = Fetcher.getSeleniumDriverInstance();
+            //driver = Fetcher.getSeleniumDriverInstance();
             driver.get(url + "&t=" + start);
         }
         catch(Exception e) {
@@ -56,7 +56,7 @@ public class YoutubePlayer {
             catch(Exception e) {
                 e.printStackTrace();
             }
-            finally {
+            /*finally {
                 if(driver != null) {
                     try {
                         driver.close();
@@ -66,7 +66,7 @@ public class YoutubePlayer {
                         e.printStackTrace();
                     }
                 }
-            }
+            }*/
         }
 
         System.out.println("Video Completed");
@@ -78,7 +78,7 @@ public class YoutubePlayer {
      * @param video
      */
 
-    public static void playVideo(Video video)
+    public static void playVideo(WebDriver driver, Video video)
     {
     	int duration = video.getTime();
     	String url = video.getUrl();
@@ -95,7 +95,7 @@ public class YoutubePlayer {
     	startTime += duration/5;
     	System.out.println("Opening video starting from "+ startTime + " and will continue for "+ playTime + " seconds");
     	
-    	openVideo(url,Integer.toString(startTime),playTime);
+    	openVideo(driver, url,Integer.toString(startTime),playTime);
     	
     }
     

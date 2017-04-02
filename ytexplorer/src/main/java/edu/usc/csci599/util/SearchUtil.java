@@ -26,7 +26,7 @@ public class SearchUtil {
      * @param topN
      * @return HashMap of URL - Content
      */
-    public static QueryResult queryAndFetch(Query query, Integer topN) {
+    public static QueryResult queryAndFetch(WebDriver driver, Query query, Integer topN) {
         System.out.println("Query: " + query.getValue() + "; Region: " + query.getRegion());
         COUNTER++;
         if(COUNTER % 50 == 0) {
@@ -43,10 +43,10 @@ public class SearchUtil {
 
         ArrayList<Video> videoList = new ArrayList<Video>();
 
-        WebDriver driver = null;
+        //WebDriver driver = null;
         boolean badRequest = false;
         try {
-            driver = Fetcher.getSeleniumDriverInstance();
+            //driver = Fetcher.getSeleniumDriverInstance();
             driver.get("https://www.youtube.com/results?search_query=" + query.getValue());
         }
         catch(Exception e) {
@@ -113,7 +113,7 @@ public class SearchUtil {
             catch(Exception e) {
                 e.printStackTrace();
             }
-            finally {
+            /*finally {
                 if(driver != null) {
                     try {
                         driver.close();
@@ -123,7 +123,7 @@ public class SearchUtil {
                         e.printStackTrace();
                     }
                 }
-            }
+            }*/
         }
 
         System.out.println("Search Completed");
@@ -137,16 +137,21 @@ public class SearchUtil {
      * @param query
      * @return HashMap of URL - Content
      */
-    public static QueryResult queryAndFetch(Query query) {
-        return queryAndFetch(query, 10);
+    public static QueryResult queryAndFetch(WebDriver driver, Query query) {
+        return queryAndFetch(driver, query, 10);
     }
 
 
     public static void main(String[] args) {
+        WebDriver driver = Fetcher.getSeleniumDriverInstance();
         Query query = new Query("bb ki vines");
         //queryAndFetch(query, 30);
-        for(Video video: queryAndFetch(query, 30).getVideos()) {
-            System.out.println(video.getUrl());
+        try {
+            for (Video video : queryAndFetch(driver, query, 30).getVideos()) {
+                System.out.println(video.getUrl());
+            }
+        } finally {
+            Fetcher.closeSeleniumDriverInstance(driver);
         }
     }
 }
