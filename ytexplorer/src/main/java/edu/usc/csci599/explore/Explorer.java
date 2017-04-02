@@ -1,7 +1,4 @@
-package edu.usc.csci599;
-
-import java.util.HashSet;
-import java.util.Set;
+package edu.usc.csci599.explore;
 
 import edu.usc.csci599.model.Query;
 import edu.usc.csci599.model.QueryResult;
@@ -12,6 +9,8 @@ import edu.usc.csci599.util.SearchUtil;
 import edu.usc.csci599.util.YoutubePlayer;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 /**
  * Created by ksingh on 2/16/17.
  */
@@ -26,8 +25,8 @@ public class Explorer {
 
     	// WE will explore everything.
     	
-    	Set<String> setA = new HashSet<String>();
-    	Set<String> setB = new HashSet<String>();
+    	Set<String> setA = new HashSet<>();
+    	Set<String> setB = new HashSet<>();
     	
     	setA = FileUtil.readLinesInSet(Explorer.class.getClassLoader().getResourceAsStream("data/a-search-queries.txt"));
     	//setB = FileUtil.readLinesInSet("b-search-queries.txt");
@@ -36,7 +35,7 @@ public class Explorer {
     	{
     		Query query = new Query(element);
     		QueryResult response = SearchUtil.queryAndFetch(query, 2);
-    		for(Video video : response.getVideos())
+    		for(Video video: response.getVideos())
     		{
     			YoutubePlayer.playVideo(video);
     		}
